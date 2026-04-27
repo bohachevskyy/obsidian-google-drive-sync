@@ -105,8 +105,8 @@ cp main.js manifest.json styles.css "$VAULT_PATH/.obsidian/plugins/obsidian-gdri
 |---|---|---|
 | Drive folder name | `ObsidianVault` | Name of the sync folder in Google Drive |
 | Auto-sync interval | Manual | 5 / 15 / 30 / 60 minutes, or manual only |
-| Sync on startup | Off | Sync when Obsidian launches |
-| Sync on save | Off | Sync after file changes (10s debounce) |
+| Sync on startup | On | Sync when Obsidian launches |
+| Sync on save | On | Sync after file changes (10s debounce) |
 | Conflict strategy | Keep newer | `keep_newer` / `keep_local` / `keep_remote` / `keep_both` / `ask` |
 | Deletion behavior | Sync | `sync` (propagate) / `trash` (move to trash) / `keep` (never delete) |
 | E2E encryption | Off | AES-256-GCM encryption before upload |
