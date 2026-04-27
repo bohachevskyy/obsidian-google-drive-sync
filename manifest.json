@@ -1,0 +1,9 @@
+{
+  "id": "obsidian-gdrive-sync",
+  "name": "Google Drive Sync",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "Sync your vault with Google Drive using your own OAuth credentials. Works on desktop and mobile.",
+  "author": "Self-hosted",
+  "isDesktopOnly": false
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Obsidian Google Drive Sync - Authorization</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh; background: #1e1e2e; color: #cdd6f4;
+    }
+    .container {
+      max-width: 480px; padding: 40px; text-align: center;
+      background: #313244; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+    h1 { font-size: 20px; margin-bottom: 16px; color: #a6e3a1; }
+    p { font-size: 14px; line-height: 1.6; margin-bottom: 16px; }
+    .code-box {
+      background: #1e1e2e; padding: 12px; border-radius: 8px;
+      font-family: monospace; font-size: 13px; word-break: break-all;
+      user-select: all; margin: 16px 0; border: 1px solid #45475a;
+    }
+    button {
+      background: #89b4fa; color: #1e1e2e; border: none;
+      padding: 10px 24px; border-radius: 8px; font-size: 14px;
+      cursor: pointer; font-weight: 600;
+    }
+    button:hover { background: #74c7ec; }
+    .error { color: #f38ba8; }
+    .success { color: #a6e3a1; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Google Drive Sync for Obsidian</h1>
+
+    <div id="redirecting">
+      <p>Authorization successful. Redirecting to Obsidian...</p>
+      <p class="success">If Obsidian doesn't open automatically, copy the code below and paste it in the plugin settings.</p>
+    </div>
+
+    <div id="manual" class="hidden">
+      <p>Could not redirect automatically. Copy this authorization code and paste it in the plugin settings:</p>
+      <div class="code-box" id="code-display"></div>
+      <button onclick="copyCode()">Copy Code</button>
+      <p id="copy-status" style="margin-top: 8px;"></p>
+    </div>
+
+    <div id="error-view" class="hidden">
+      <p class="error">Authorization failed. Please try again from Obsidian.</p>
+      <p id="error-detail" class="error" style="font-size: 12px;"></p>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      const state = params.get('state');
+      const error = params.get('error');
+
+      if (error) {
+        document.getElementById('redirecting').classList.add('hidden');
+        document.getElementById('error-view').classList.remove('hidden');
+        document.getElementById('error-detail').textContent = error;
+        return;
+      }
+
+      if (!code) {
+        document.getElementById('redirecting').classList.add('hidden');
+        document.getElementById('error-view').classList.remove('hidden');
+        document.getElementById('error-detail').textContent = 'No authorization code received.';
+        return;
+      }
+
+      // Build the Obsidian protocol URL
+      var obsidianUrl = 'obsidian://gdrive-sync?code=' + encodeURIComponent(code);
+      if (state) {
+        obsidianUrl += '&state=' + encodeURIComponent(state);
+      }
+
+      // Store code for manual fallback
+      document.getElementById('code-display').textContent = code;
+
+      // Try to redirect to Obsidian
+      window.location.href = obsidianUrl;
+
+      // If still on this page after 3 seconds, show manual copy option
+      setTimeout(function() {
+        document.getElementById('redirecting').classList.add('hidden');
+        document.getElementById('manual').classList.remove('hidden');
+      }, 3000);
+    })();
+
+    function copyCode() {
+      var code = document.getElementById('code-display').textContent;
+      navigator.clipboard.writeText(code).then(function() {
+        document.getElementById('copy-status').textContent = 'Copied!';
+        document.getElementById('copy-status').className = 'success';
+      }).catch(function() {
+        // Fallback for older browsers
+        var range = document.createRange();
+        range.selectNode(document.getElementById('code-display'));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.getElementById('copy-status').textContent = 'Select all text above and copy manually.';
+      });
+    }
+  </script>
+</body>
+</html>

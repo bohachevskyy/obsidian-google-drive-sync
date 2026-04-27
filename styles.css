@@ -1,0 +1,78 @@
+.gdrive-sync-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gdrive-sync-status .sync-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.gdrive-sync-status.syncing .sync-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.gdrive-sync-settings .setting-item-heading {
+  margin-top: 20px;
+}
+
+.gdrive-sync-settings .auth-status {
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.gdrive-sync-settings .auth-status.connected {
+  background-color: var(--background-modifier-success);
+  color: var(--text-success);
+}
+
+.gdrive-sync-settings .auth-status.disconnected {
+  background-color: var(--background-modifier-error);
+  color: var(--text-error);
+}
+
+.gdrive-sync-conflict-modal .conflict-container {
+  display: flex;
+  gap: 16px;
+}
+
+.gdrive-sync-conflict-modal .conflict-side {
+  flex: 1;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.gdrive-sync-conflict-modal .conflict-side h4 {
+  margin-top: 0;
+}
+
+.gdrive-sync-conflict-modal .conflict-content {
+  font-family: var(--font-monospace);
+  font-size: 12px;
+  white-space: pre-wrap;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.gdrive-sync-log-modal .log-entry {
+  padding: 4px 0;
+  border-bottom: 1px solid var(--background-modifier-border);
+  font-size: 13px;
+}
+
+.gdrive-sync-log-modal .log-entry .log-action {
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.gdrive-sync-log-modal .log-entry .log-path {
+  color: var(--text-muted);
+}
