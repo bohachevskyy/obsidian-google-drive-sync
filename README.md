@@ -113,6 +113,35 @@ cp main.js manifest.json styles.css "$VAULT_PATH/.obsidian/plugins/obsidian-gdri
 | Max file size | 50 MB | Skip files larger than this |
 | Sync .obsidian/ | Off | Sync settings, themes, configs (tokens always excluded) |
 
+## Where your data is stored
+
+After installation, the plugin creates exactly one file on your device that holds all credentials and settings:
+
+```
+<YourVault>/.obsidian/plugins/obsidian-gdrive-sync/data.json
+```
+
+**Concrete paths:**
+
+| Platform | Path |
+|---|---|
+| Mac (iCloud vault) | `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/<vault>/.obsidian/plugins/obsidian-gdrive-sync/data.json` |
+| Mac (local vault) | `<vault>/.obsidian/plugins/obsidian-gdrive-sync/data.json` |
+| iOS (iPhone/iPad) | Sandboxed inside the Obsidian app container — not directly accessible via the Files app |
+
+**What's inside `data.json`:**
+
+- `clientId`, `clientSecret` — your Google OAuth credentials
+- `accessToken` — short-lived (1 hour) Drive API token
+- `refreshToken` — long-lived token used to mint new access tokens
+- `encryptionPassword` — if E2E encryption is enabled
+- `syncState` and `syncLog` — sync metadata (hashes, timestamps, recent operations)
+- All other plugin settings
+
+This file is plain JSON and **not encrypted at rest**. Anyone with filesystem access to your unlocked device can read it. The `drive.file` scope limits the blast radius — a leaked token can only access files this plugin created (your synced vault), not anything else on your Drive.
+
+The other files in the same folder (`main.js`, `manifest.json`, `styles.css`) are just the plugin code — no secrets.
+
 ## Security
 
 - **OAuth tokens** are stored locally in `.obsidian/plugins/obsidian-gdrive-sync/data.json` and never transmitted to any third party.

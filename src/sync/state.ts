@@ -4,6 +4,8 @@ import type { SyncState, SyncMetaEntry, SyncLogEntry } from "../types";
 const SYNC_STATE_KEY = "syncState";
 const SYNC_LOG_KEY = "syncLog";
 const MAX_LOG_ENTRIES = 500;
+const LOG_RETENTION_DAYS = 7;
+const LOG_RETENTION_MS = LOG_RETENTION_DAYS * 24 * 60 * 60 * 1000;
 
 /**
  * Generate a random device identifier.
@@ -42,6 +44,7 @@ export class SyncStateManager {
     }
     if (data && data[SYNC_LOG_KEY]) {
       this.log = data[SYNC_LOG_KEY];
+      this.pruneOldLogEntries();
     }
   }
 
@@ -148,5 +151,15 @@ export class SyncStateManager {
 
   clearLog(): void {
     this.log = [];
+  }
+
+  /**
+   * Drop log entries older than LOG_RETENTION_DAYS.
+   */
+  pruneOldLogEntries(): number {
+    const cutoff = Date.now() - LOG_RETENTION_MS;
+    const before = this.log.length;
+    this.log = this.log.filter((e) => e.timestamp >= cutoff);
+    return before - this.log.length;
   }
 }

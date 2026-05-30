@@ -176,6 +176,11 @@ export class SyncEngine {
       this.logger(`Pruned ${pruned} expired tombstones`);
     }
 
+    const prunedLogs = this.stateManager.pruneOldLogEntries();
+    if (prunedLogs > 0) {
+      this.logger(`Pruned ${prunedLogs} log entries older than 7 days`);
+    }
+
     this.stateManager.state.lastFullSync = Date.now();
     await this.stateManager.save();
 
